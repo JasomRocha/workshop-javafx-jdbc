@@ -70,7 +70,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 	public void onBtNewAction(ActionEvent event) {
 		Stage parentStage = Utils.currentStage(event);
 		Seller obj = new Seller();
-		createDialogForm(obj, parentStage, "/gui/SellerForm.fxml");
+		createDialogForm(obj,  "/gui/SellerForm.fxml", parentStage);
 	}
 
 	public void setSellerService(SellerService service) {
@@ -88,9 +88,10 @@ public class SellerListController implements Initializable, DataChangeListener {
 		tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
 		tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
 		tableColumnBirthDate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
-		Utils.formatTableColumnDate((TableColumn<Seller, Date>) tableColumnBirthDate, "dd/MM/yyyy");
+		Utils.formatTableColumnDate(tableColumnBirthDate, "dd/MM/yyyy");
 		tableColumnBaseSalary.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
 		Utils.formatTableColumnDouble(tableColumnBaseSalary, 2);
+		
 		Stage stage = (Stage) Main.getMainScene().getWindow();
 		tableViewSeller.prefHeightProperty().bind(stage.heightProperty());
 	}
@@ -106,7 +107,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 		initRemoveButtons();
 	}
 
-	private void createDialogForm(Seller obj, Stage parentStage, String absoluteName) {
+	private void createDialogForm(Seller obj,  String absoluteName, Stage parentStage) {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			Pane pane = loader.load();
@@ -126,7 +127,8 @@ public class SellerListController implements Initializable, DataChangeListener {
 			dialogStage.showAndWait();
 
 		} catch (IOException e) {
-			Alerts.showAlert("IOException", "Error loading view", e.getMessage(), AlertType.ERROR);
+			e.printStackTrace();
+			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
 		} 
 	}
 
@@ -149,7 +151,7 @@ public class SellerListController implements Initializable, DataChangeListener {
 				}
 				setGraphic(button);
 				button.setOnAction(
-						event -> createDialogForm(obj, Utils.currentStage(event), "/gui/SellerForm.fxml"));
+						event -> createDialogForm(obj, "/gui/SellerForm.fxml", Utils.currentStage(event)));
 			}
 		});
 	}
